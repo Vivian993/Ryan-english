@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國小五年級英文期中考 - 全功能單字卡館</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background-color: #f0fdf4;
+            color: #0f172a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 16px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 12px;
+            width: 100%;
+            max-width: 500px;
+        }
+        header h1 {
+            font-size: 24px;
+            color: #0d9488;
+            margin-bottom: 4px;
+        }
+        header p {
+            font-size: 13px;
+            color: #64748b;
+        }
+        .controls {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .cat-buttons {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        .cat-btn {
+            background: #ccfbf1;
+            color: #0f766e;
+            border: 1px solid #99f6e4;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            flex: 1;
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+        .cat-btn.active {
+            background: #0d9488;
+            color: white;
+            border-color: #0d9488;
+            box-shadow: 0 2px 4px rgba(13, 148, 136, 0.2);
+        }
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+        .tool-btn {
+            flex: 1;
+            background: white;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            transition: background-color 0.1s;
+        }
+        .tool-btn:active {
+            background-color: #f1f5f9;
+        }
+        .card-container {
+            width: 100%;
+            max-width: 500px;
+            height: 260px;
+            perspective: 1000px;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .card-container.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            border: 3px solid #99f6e4;
+        }
+        /* 正面：中文大字（清爽柔和淺綠） */
+        .card-front {
+            background-color: #e6fffa;
+            color: #134e4a;
+        }
+        /* 背面：英文大字（淺金黃柔光） */
+        .card-back {
+            background-color: #fefce8;
+            color: #713f12;
+            transform: rotateY(180deg);
+            border-color: #fef08a;
+        }
+        .card-tag {
+            font-size: 13px;
+            font-weight: 800;
+            background: rgba(255,255,255,0.7);
+            padding: 4px 12px;
+            border-radius: 14px;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .text-main-zh {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        .text-main-en {
+            font-size: 44px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+        .text-sub {
+            font-size: 16px;
+            color: #475569;
+            font-weight: 600;
+        }
+        .flip-hint {
+            position: absolute;
+            bottom: 12px;
+            font-size: 12px;
+            opacity: 0.6;
+            font-weight: bold;
+        }
+        /* 打字測驗區 */
+        .quiz-input-box {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .quiz-input-box input {
+            flex: 1;
+            padding: 14px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid #cbd5e1;
+            border-radius: 14px;
+            outline: none;
+            text-align: center;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.2s;
+        }
+        .quiz-input-box input:focus {
+            border-color: #0d9488;
+        }
+        .quiz-input-box input.correct {
+            border-color: #10b981;
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .quiz-input-box input.wrong {
+            border-color: #f43f5e;
+            background-color: #ffe4e6;
+            color: #9f1239;
+        }
+        /* 導覽按鈕 */
+        .nav-controls {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-btn {
+            background: #0d9488;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(13, 148, 136, 0.25);
+            transition: transform 0.1s;
+        }
+        .nav-btn:active {
+            transform: scale(0.96);
+        }
+        .progress-text {
+            font-size: 16px;
+            font-weight: 800;
+            color: #334155;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>國小五年級英文全功能字卡</h1>
+        <p>正面中文大字 ➔ 點擊翻面按鍵聲音效發音</p>
+    </header>
+
+    <div class="controls">
+        <div class="cat-buttons">
+            <button onclick="changeCategory('all', this)" class="cat-btn active">全部 (35)</button>
+            <button onclick="changeCategory('numbers', this)" class="cat-btn">數字 (10)</button>
+            <button onclick="changeCategory('days', this)" class="cat-btn">星期 (7)</button>
+            <button onclick="changeCategory('subjects', this)" class="cat-btn">科目 (8)</button>
+            <button onclick="changeCategory('phonics', this)" class="cat-btn">發音 (10)</button>
+        </div>
+        <div class="action-btns">
+            <button onclick="shuffleCards()" class="tool-btn">🔀 隨機洗牌</button>
+            <button onclick="speakCurrentWord()" class="tool-btn">🔊 播放發音</button>
+        </div>
+    </div>
+
+    <!-- 字卡本體 -->
+    <div class="card-container" id="cardContainer" onclick="toggleFlip()">
+        <div class="card-inner">
+            <!-- 正面：中文超大字 -->
+            <div class="card-front">
+                <div class="card-tag" id="cardTag">數字</div>
+                <div class="text-main-zh" id="cardZh">四十</div>
+                <div class="text-sub" id="cardHint">提示：f _ _ t y</div>
+                <div class="flip-hint">💡 點擊卡片翻面看答案</div>
+            </div>
+            <!-- 背面：英文超大字 -->
+            <div class="card-back">
+                <div class="card-tag">ENGLISH</div>
+                <div class="text-main-en" id="cardEn">forty</div>
+                <div class="text-sub" id="cardNote">注意沒有 u</div>
+                <div class="flip-hint">💡 點擊卡片翻回正面</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 拼寫測驗輸入框 -->
+    <div class="quiz-input-box">
+        <input type="text" id="userInput" placeholder="在正面試著拼出英文..." oninput="checkSpelling(this)">
+    </div>
+
+    <!-- 導覽 controls -->
+    <div class="nav-controls">
+        <button onclick="prevCard()" class="nav-btn">◀ 上一張</button>
+        <span class="progress-text" id="progressText">1 / 35</span>
+        <button onclick="nextCard()" class="nav-btn">下一張 ▶</button>
+    </div>
+
+    <script>
+        // 原生按鍵音效 (Web Audio API)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playClickSound(freq = 600, duration = 0.05, type = 'sine') {
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        const rawData = [
+            // Numbers
+            { cat: 'numbers', catZh: '數字', zh: '十 (10)', en: 'ten', hint: 't _ _', note: '數字 10' },
+            { cat: 'numbers', catZh: '數字', zh: '二十 (20)', en: 'twenty', hint: 't w _ _ t y', note: '數字 20' },
+            { cat: 'numbers', catZh: '數字', zh: '三十 (30)', en: 'thirty', hint: 't h _ _ t y', note: '數字 30' },
+            { cat: 'numbers', catZh: '數字', zh: '四十 (40)', en: 'forty', hint: 'f _ _ t y', note: '特別注意沒有 u' },
+            { cat: 'numbers', catZh: '數字', zh: '五十 (50)', en: 'fifty', hint: 'f _ _ t y', note: '數字 50' },
+            { cat: 'numbers', catZh: '數字', zh: '六十 (60)', en: 'sixty', hint: 's _ _ t y', note: '數字 60' },
+            { cat: 'numbers', catZh: '數字', zh: '七十 (70)', en: 'seventy', hint: 's _ v _ n t y', note: '數字 70' },
+            { cat: 'numbers', catZh: '數字', zh: '八十 (80)', en: 'eighty', hint: 'e _ g h t y', note: '數字 80' },
+            { cat: 'numbers', catZh: '數字', zh: '九十 (90)', en: 'ninety', hint: 'n _ n _ t y', note: '數字 90' },
+            { cat: 'numbers', catZh: '數字', zh: '一百 (100)', en: 'one hundred', hint: 'o n e  h _ n d r _ d', note: '數字 100' },
+            // Days
+            { cat: 'days', catZh: '星期', zh: '星期日', en: 'Sunday', hint: 'S _ n d a y', note: '簡寫 Sun.' },
+            { cat: 'days', catZh: '星期', zh: '星期一', en: 'Monday', hint: 'M _ n d a y', note: '簡寫 Mon.' },
+            { cat: 'days', catZh: '星期', zh: '星期二', en: 'Tuesday', hint: 'T _ _ s d a y', note: '簡寫 Tue.' },
+            { cat: 'days', catZh: '星期', zh: '星期三', en: 'Wednesday', hint: 'W _ d n e s d a y', note: '注意 d 不發音 (Wed.)' },
+            { cat: 'days', catZh: '星期', zh: '星期四', en: 'Thursday', hint: 'T h _ r s d a y', note: '簡寫 Thu.' },
+            { cat: 'days', catZh: '星期', zh: '星期五', en: 'Friday', hint: 'F _ i d a y', note: '簡寫 Fri.' },
+            { cat: 'days', catZh: '星期', zh: '星期六', en: 'Saturday', hint: 'S _ t u r d a y', note: '簡寫 Sat.' },
+            // Subjects
+            { cat: 'subjects', catZh: '科目', zh: '美術 / 藝術', en: 'art', hint: 'a _ t', note: '畫畫科目' },
+            { cat: 'subjects', catZh: '科目', zh: '國語 / 中文', en: 'Chinese', hint: 'C _ i n e s e', note: '字首 C 大寫' },
+            { cat: 'subjects', catZh: '科目', zh: '英文', en: 'English', hint: 'E _ g l i s h', note: '字首 E 大寫' },
+            { cat: 'subjects', catZh: '科目', zh: '數學', en: 'math', hint: 'm _ t h', note: '數字計算' },
+            { cat: 'subjects', catZh: '科目', zh: '音樂', en: 'music', hint: 'm _ s i c', note: '唱歌樂器' },
+            { cat: 'subjects', catZh: '科目', zh: '自然 / 科學', en: 'science', hint: 's _ i e n c e', note: '科學實驗' },
+            { cat: 'subjects', catZh: '科目', zh: '社會', en: 'social studies', hint: 's _ c i a l  s _ u d i e s', note: '社會學科' },
+            { cat: 'subjects', catZh: '科目', zh: '體育', en: 'PE', hint: 'P _', note: 'Physical Education' },
+            // Phonics
+            { cat: 'phonics', catZh: '自然發音', zh: '風箏', en: 'kite', hint: '-i_e 長音', note: 'kite' },
+            { cat: 'phonics', catZh: '自然發音', zh: '腳踏車', en: 'bike', hint: '-i_e 長音', note: 'bike' },
+            { cat: 'phonics', catZh: '自然發音', zh: '領帶', en: 'tie', hint: '-ie 長音', note: 'tie' },
+            { cat: 'phonics', catZh: '自然發音', zh: '派', en: 'pie', hint: '-ie 長音', note: 'pie' },
+            { cat: 'phonics', catZh: '自然發音', zh: '蒼蠅', en: 'fly', hint: '-y 長音', note: 'fly' },
+            { cat: 'phonics', catZh: '自然發音', zh: '天空', en: 'sky', hint: '-y 長音', note: 'sky' },
+            { cat: 'phonics', catZh: '自然發音', zh: '蛋糕', en: 'cake', hint: '-a_e 長音', note: 'cake' },
+            { cat: 'phonics', catZh: '自然發音', zh: '湖泊', en: 'lake', hint: '-a_e 長音', note: 'lake' },
+            { cat: 'phonics', catZh: '自然發音', zh: '帽子', en: 'cap', hint: '-a- 短音', note: 'cap' },
+            { cat: 'phonics', catZh: '自然發音', zh: '寵物', en: 'pet', hint: '-e- 短音', note: 'pet' }
+        ];
+
+        let currentCards = [...rawData];
+        let currentIndex = 0;
+        let isFlipped = false;
+
+        function updateCardDisplay() {
+            const item = currentCards[currentIndex];
+            if (!item) return;
+
+            document.getElementById('cardTag').innerText = item.catZh;
+            document.getElementById('cardZh').innerText = item.zh;
+            document.getElementById('cardHint').innerText = `提示：${item.hint}`;
+            document.getElementById('cardEn').innerText = item.en;
+            document.getElementById('cardNote').innerText = item.note || '';
+
+            document.getElementById('progressText').innerText = `${currentIndex + 1} / ${currentCards.length}`;
+
+            // Reset Input & Flip Status
+            const input = document.getElementById('userInput');
+            input.value = '';
+            input.className = '';
+            
+            if (isFlipped) {
+                document.getElementById('cardContainer').classList.remove('flipped');
+                isFlipped = false;
+            }
+        }
+
+        function toggleFlip() {
+            playClickSound(800, 0.04, 'triangle');
+            isFlipped = !isFlipped;
+            const container = document.getElementById('cardContainer');
+            if (isFlipped) {
+                container.classList.add('flipped');
+                speakCurrentWord();
+            } else {
+                container.classList.remove('flipped');
+            }
+        }
+
+        function nextCard() {
+            playClickSound(500, 0.03, 'sine');
+            if (currentIndex < currentCards.length - 1) {
+                currentIndex++;
+                updateCardDisplay();
+            }
+        }
+
+        function prevCard() {
+            playClickSound(450, 0.03, 'sine');
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCardDisplay();
+            }
+        }
+
+        function changeCategory(cat, btn) {
+            playClickSound(700, 0.04, 'sine');
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            if (cat === 'all') {
+                currentCards = [...rawData];
+            } else {
+                currentCards = rawData.filter(d => d.cat === cat);
+            }
+            currentIndex = 0;
+            updateCardDisplay();
+        }
+
+        function shuffleCards() {
+            playClickSound(900, 0.06, 'square');
+            for (let i = currentCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [currentCards[i], currentCards[j]] = [currentCards[j], currentCards[i]];
+            }
+            currentIndex = 0;
+            updateCardDisplay();
+        }
+
+        function checkSpelling(input) {
+            const currentEn = currentCards[currentIndex].en.toLowerCase();
+            const val = input.value.trim().toLowerCase();
+
+            if (val === '') {
+                input.className = '';
+            } else if (val === currentEn) {
+                playClickSound(1200, 0.1, 'sine');
+                input.className = 'correct';
+                if (!isFlipped) toggleFlip(); // 拼對自動翻面展示答案與發音
+            } else {
+                input.className = 'wrong';
+            }
+        }
+
+        function speakCurrentWord() {
+            playClickSound(650, 0.03, 'sine');
+            const text = currentCards[currentIndex].en;
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        updateCardDisplay();
+    </script>
+</body>
+</html>
