@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>國小五年級英文期中考 - 全功能單字卡館</title>
-   <!-- 📌 iPhone 桌面 App 圖示：它會去抓您上傳到 GitHub 的 custom-icon.png 照片 -->
-   <link rel="apple-touch-icon" href="custom-icon.png">
-   <link rel="icon" type="image/png" href="custom-icon.png">
+    <!-- 📌 iPhone 桌面 App 圖示：它會去抓您上傳到 GitHub 的 custom-icon.png 照片 -->
+    <link rel="apple-touch-icon" href="custom-icon.png">
+    <link rel="icon" type="image/png" href="custom-icon.png">
     <style>
         * {
             box-sizing: border-box;
@@ -140,37 +140,32 @@
             border-color: #fef08a;
         }
         .card-tag {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 800;
             background: rgba(255,255,255,0.7);
-            padding: 4px 12px;
+            padding: 4px 14px;
             border-radius: 14px;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         .text-main-zh {
-            font-size: 42px;
+            font-size: 48px;
             font-weight: 900;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             line-height: 1.2;
         }
         .text-main-en {
-            font-size: 44px;
+            font-size: 50px;
             font-weight: 900;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             letter-spacing: 1px;
             line-height: 1.2;
         }
-        .text-sub {
-            font-size: 16px;
-            color: #475569;
-            font-weight: 600;
-        }
         .flip-hint {
             position: absolute;
-            bottom: 12px;
-            font-size: 12px;
+            bottom: 14px;
+            font-size: 13px;
             opacity: 0.6;
             font-weight: bold;
         }
@@ -240,8 +235,8 @@
 <body>
 
     <header>
-        <h1>國小五年級英文全功能字卡</h1>
-        <p>正面中文大字 ➔ 點擊翻面按鍵聲音效發音</p>
+        <h1>國小五年級英文單字卡</h1>
+        <p>正面中文大字 ➔ 點擊翻面聽語音與按鍵聲</p>
     </header>
 
     <div class="controls">
@@ -261,18 +256,16 @@
     <!-- 字卡本體 -->
     <div class="card-container" id="cardContainer" onclick="toggleFlip()">
         <div class="card-inner">
-            <!-- 正面：中文超大字 -->
+            <!-- 正面：中文超大字（無提示） -->
             <div class="card-front">
                 <div class="card-tag" id="cardTag">數字</div>
                 <div class="text-main-zh" id="cardZh">四十</div>
-                <div class="text-sub" id="cardHint">提示：f _ _ t y</div>
                 <div class="flip-hint">💡 點擊卡片翻面看答案</div>
             </div>
-            <!-- 背面：英文超大字 -->
+            <!-- 背面：英文超大字（無提示） -->
             <div class="card-back">
                 <div class="card-tag">ENGLISH</div>
                 <div class="text-main-en" id="cardEn">forty</div>
-                <div class="text-sub" id="cardNote">注意沒有 u</div>
                 <div class="flip-hint">💡 點擊卡片翻回正面</div>
             </div>
         </div>
@@ -280,7 +273,7 @@
 
     <!-- 拼寫測驗輸入框 -->
     <div class="quiz-input-box">
-        <input type="text" id="userInput" placeholder="在正面試著拼出英文..." oninput="checkSpelling(this)">
+        <input type="text" id="userInput" placeholder="輸入英文測試記憶..." oninput="checkSpelling(this)">
     </div>
 
     <!-- 導覽 controls -->
@@ -314,44 +307,44 @@
 
         const rawData = [
             // Numbers
-            { cat: 'numbers', catZh: '數字', zh: '十 (10)', en: 'ten', hint: 't _ _', note: '數字 10' },
-            { cat: 'numbers', catZh: '數字', zh: '二十 (20)', en: 'twenty', hint: 't w _ _ t y', note: '數字 20' },
-            { cat: 'numbers', catZh: '數字', zh: '三十 (30)', en: 'thirty', hint: 't h _ _ t y', note: '數字 30' },
-            { cat: 'numbers', catZh: '數字', zh: '四十 (40)', en: 'forty', hint: 'f _ _ t y', note: '特別注意沒有 u' },
-            { cat: 'numbers', catZh: '數字', zh: '五十 (50)', en: 'fifty', hint: 'f _ _ t y', note: '數字 50' },
-            { cat: 'numbers', catZh: '數字', zh: '六十 (60)', en: 'sixty', hint: 's _ _ t y', note: '數字 60' },
-            { cat: 'numbers', catZh: '數字', zh: '七十 (70)', en: 'seventy', hint: 's _ v _ n t y', note: '數字 70' },
-            { cat: 'numbers', catZh: '數字', zh: '八十 (80)', en: 'eighty', hint: 'e _ g h t y', note: '數字 80' },
-            { cat: 'numbers', catZh: '數字', zh: '九十 (90)', en: 'ninety', hint: 'n _ n _ t y', note: '數字 90' },
-            { cat: 'numbers', catZh: '數字', zh: '一百 (100)', en: 'one hundred', hint: 'o n e  h _ n d r _ d', note: '數字 100' },
+            { cat: 'numbers', catZh: '數字', zh: '十 (10)', en: 'ten' },
+            { cat: 'numbers', catZh: '數字', zh: '二十 (20)', en: 'twenty' },
+            { cat: 'numbers', catZh: '數字', zh: '三十 (30)', en: 'thirty' },
+            { cat: 'numbers', catZh: '數字', zh: '四十 (40)', en: 'forty' },
+            { cat: 'numbers', catZh: '數字', zh: '五十 (50)', en: 'fifty' },
+            { cat: 'numbers', catZh: '數字', zh: '六十 (60)', en: 'sixty' },
+            { cat: 'numbers', catZh: '數字', zh: '七十 (70)', en: 'seventy' },
+            { cat: 'numbers', catZh: '數字', zh: '八十 (80)', en: 'eighty' },
+            { cat: 'numbers', catZh: '數字', zh: '九十 (90)', en: 'ninety' },
+            { cat: 'numbers', catZh: '數字', zh: '一百 (100)', en: 'one hundred' },
             // Days
-            { cat: 'days', catZh: '星期', zh: '星期日', en: 'Sunday', hint: 'S _ n d a y', note: '簡寫 Sun.' },
-            { cat: 'days', catZh: '星期', zh: '星期一', en: 'Monday', hint: 'M _ n d a y', note: '簡寫 Mon.' },
-            { cat: 'days', catZh: '星期', zh: '星期二', en: 'Tuesday', hint: 'T _ _ s d a y', note: '簡寫 Tue.' },
-            { cat: 'days', catZh: '星期', zh: '星期三', en: 'Wednesday', hint: 'W _ d n e s d a y', note: '注意 d 不發音 (Wed.)' },
-            { cat: 'days', catZh: '星期', zh: '星期四', en: 'Thursday', hint: 'T h _ r s d a y', note: '簡寫 Thu.' },
-            { cat: 'days', catZh: '星期', zh: '星期五', en: 'Friday', hint: 'F _ i d a y', note: '簡寫 Fri.' },
-            { cat: 'days', catZh: '星期', zh: '星期六', en: 'Saturday', hint: 'S _ t u r d a y', note: '簡寫 Sat.' },
+            { cat: 'days', catZh: '星期', zh: '星期日', en: 'Sunday' },
+            { cat: 'days', catZh: '星期', zh: '星期一', en: 'Monday' },
+            { cat: 'days', catZh: '星期', zh: '星期二', en: 'Tuesday' },
+            { cat: 'days', catZh: '星期', zh: '星期三', en: 'Wednesday' },
+            { cat: 'days', catZh: '星期', zh: '星期四', en: 'Thursday' },
+            { cat: 'days', catZh: '星期', zh: '星期五', en: 'Friday' },
+            { cat: 'days', catZh: '星期', zh: '星期六', en: 'Saturday' },
             // Subjects
-            { cat: 'subjects', catZh: '科目', zh: '美術 / 藝術', en: 'art', hint: 'a _ t', note: '畫畫科目' },
-            { cat: 'subjects', catZh: '科目', zh: '國語 / 中文', en: 'Chinese', hint: 'C _ i n e s e', note: '字首 C 大寫' },
-            { cat: 'subjects', catZh: '科目', zh: '英文', en: 'English', hint: 'E _ g l i s h', note: '字首 E 大寫' },
-            { cat: 'subjects', catZh: '科目', zh: '數學', en: 'math', hint: 'm _ t h', note: '數字計算' },
-            { cat: 'subjects', catZh: '科目', zh: '音樂', en: 'music', hint: 'm _ s i c', note: '唱歌樂器' },
-            { cat: 'subjects', catZh: '科目', zh: '自然 / 科學', en: 'science', hint: 's _ i e n c e', note: '科學實驗' },
-            { cat: 'subjects', catZh: '科目', zh: '社會', en: 'social studies', hint: 's _ c i a l  s _ u d i e s', note: '社會學科' },
-            { cat: 'subjects', catZh: '科目', zh: '體育', en: 'PE', hint: 'P _', note: 'Physical Education' },
+            { cat: 'subjects', catZh: '科目', zh: '美術 / 藝術', en: 'art' },
+            { cat: 'subjects', catZh: '科目', zh: '國語 / 中文', en: 'Chinese' },
+            { cat: 'subjects', catZh: '科目', zh: '英文', en: 'English' },
+            { cat: 'subjects', catZh: '科目', zh: '數學', en: 'math' },
+            { cat: 'subjects', catZh: '科目', zh: '音樂', en: 'music' },
+            { cat: 'subjects', catZh: '科目', zh: '自然 / 科學', en: 'science' },
+            { cat: 'subjects', catZh: '科目', zh: '社會', en: 'social studies' },
+            { cat: 'subjects', catZh: '科目', zh: '體育', en: 'PE' },
             // Phonics
-            { cat: 'phonics', catZh: '自然發音', zh: '風箏', en: 'kite', hint: '-i_e 長音', note: 'kite' },
-            { cat: 'phonics', catZh: '自然發音', zh: '腳踏車', en: 'bike', hint: '-i_e 長音', note: 'bike' },
-            { cat: 'phonics', catZh: '自然發音', zh: '領帶', en: 'tie', hint: '-ie 長音', note: 'tie' },
-            { cat: 'phonics', catZh: '自然發音', zh: '派', en: 'pie', hint: '-ie 長音', note: 'pie' },
-            { cat: 'phonics', catZh: '自然發音', zh: '蒼蠅', en: 'fly', hint: '-y 長音', note: 'fly' },
-            { cat: 'phonics', catZh: '自然發音', zh: '天空', en: 'sky', hint: '-y 長音', note: 'sky' },
-            { cat: 'phonics', catZh: '自然發音', zh: '蛋糕', en: 'cake', hint: '-a_e 長音', note: 'cake' },
-            { cat: 'phonics', catZh: '自然發音', zh: '湖泊', en: 'lake', hint: '-a_e 長音', note: 'lake' },
-            { cat: 'phonics', catZh: '自然發音', zh: '帽子', en: 'cap', hint: '-a- 短音', note: 'cap' },
-            { cat: 'phonics', catZh: '自然發音', zh: '寵物', en: 'pet', hint: '-e- 短音', note: 'pet' }
+            { cat: 'phonics', catZh: '自然發音', zh: '風箏', en: 'kite' },
+            { cat: 'phonics', catZh: '自然發音', zh: '腳踏車', en: 'bike' },
+            { cat: 'phonics', catZh: '自然發音', zh: '領帶', en: 'tie' },
+            { cat: 'phonics', catZh: '自然發音', zh: '派', en: 'pie' },
+            { cat: 'phonics', catZh: '自然發音', zh: '蒼蠅', en: 'fly' },
+            { cat: 'phonics', catZh: '自然發音', zh: '天空', en: 'sky' },
+            { cat: 'phonics', catZh: '自然發音', zh: '蛋糕', en: 'cake' },
+            { cat: 'phonics', catZh: '自然發音', zh: '湖泊', en: 'lake' },
+            { cat: 'phonics', catZh: '自然發音', zh: '帽子', en: 'cap' },
+            { cat: 'phonics', catZh: '自然發音', zh: '寵物', en: 'pet' }
         ];
 
         let currentCards = [...rawData];
@@ -364,9 +357,7 @@
 
             document.getElementById('cardTag').innerText = item.catZh;
             document.getElementById('cardZh').innerText = item.zh;
-            document.getElementById('cardHint').innerText = `提示：${item.hint}`;
             document.getElementById('cardEn').innerText = item.en;
-            document.getElementById('cardNote').innerText = item.note || '';
 
             document.getElementById('progressText').innerText = `${currentIndex + 1} / ${currentCards.length}`;
 
